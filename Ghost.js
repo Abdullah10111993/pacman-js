@@ -2,7 +2,7 @@ import { DIRECTIONS, OBJECT_TYPE } from './setup';
 import { randomMovement } from './GhostMoves';
 
 class Ghost {
-    constructor(speed = 20, startPos, movement, name) {
+    constructor(speed = 5, startPos, movement, name) {
         this.name = name;
         this.movement = movement;
         this.startPos = startPos;
@@ -16,7 +16,7 @@ class Ghost {
 
     shouldMove () {
         if (this.timer === this.speed) {
-            this.time = 0;
+            this.timer = 0;
             return true;
         }
         this.timer++;

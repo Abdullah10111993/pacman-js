@@ -529,7 +529,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var Ghost = /*#__PURE__*/function () {
   function Ghost() {
-    var speed = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 20;
+    var speed = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 5;
     var startPos = arguments.length > 1 ? arguments[1] : undefined;
     var movement = arguments.length > 2 ? arguments[2] : undefined;
     var name = arguments.length > 3 ? arguments[3] : undefined;
@@ -549,7 +549,7 @@ var Ghost = /*#__PURE__*/function () {
     key: "shouldMove",
     value: function shouldMove() {
       if (this.timer === this.speed) {
-        this.time = 0;
+        this.timer = 0;
         return true;
       }
 
@@ -657,7 +657,39 @@ function gameLoop(pacman, ghosts) {
   ghosts.forEach(function (ghost) {
     return gameBoard.moveCharacter(ghost);
   });
-  checkCollision(pacman, ghosts);
+  checkCollision(pacman, ghosts); //Pacman eats dots
+
+  if (gameBoard.objectExist(pacman.pos, _setup.OBJECT_TYPE.DOT)) {
+    gameBoard.removeObject(pacman.pos, [_setup.OBJECT_TYPE.DOT]);
+    gameBoard.dotCount--;
+    score += 10;
+  } // Pacman eats powerpill
+
+
+  if (gameBoard.objectExist(pacman.pos, _setup.OBJECT_TYPE.PILL)) {
+    gameBoard.removeObject(pacman.pos, [_setup.OBJECT_TYPE.PILL]);
+    pacman.powerPill = true;
+    score += 50;
+    clearTimeout(powerPillTimer);
+    powerPillTimer = setTimeout(function () {
+      return pacman.powerPill = false;
+    }, POWER_PILL_TIME);
+  } //change ghost scare mode
+
+
+  if (pacman.powerPill !== powerPillActive) {
+    powerPillActive = pacman.powerPill;
+    ghosts.forEach(function (ghost) {
+      return ghost.isScared = pacman.powerPill;
+    });
+  }
+
+  if (gameBoard.dotCount === 0) {
+    gameWin = true;
+    gameOver(pacman, ghosts);
+  }
+
+  scoreTable.innerHTML = score;
 }
 
 function startGame() {
