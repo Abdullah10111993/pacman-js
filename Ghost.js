@@ -2,7 +2,7 @@ import { DIRECTIONS, OBJECT_TYPE } from './setup';
 import { randomMovement } from './GhostMoves';
 
 class Ghost {
-    constructor(speed = 5, startPos, movement, name) {
+    constructor(speed = 20, startPos, movement, name) {
         this.name = name;
         this.movement = movement;
         this.startPos = startPos;
