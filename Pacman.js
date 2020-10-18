@@ -7,7 +7,7 @@ class Pacman {
         this.dir = null;
         this.timer = 0;
         this.powerPill = false;
-        this.rotaion = true;
+        this.rotation = true;
     }
 
     shouldMove() {
@@ -34,10 +34,10 @@ class Pacman {
     }
 
     makeMove() {
-        const classTORemove = [OBJECT_TYPE.PACMAN];
-        const classTOAdd = [OBJECT_TYPE.PACMAN];
+        const classesToRemove = [OBJECT_TYPE.PACMAN];
+        const classesToAdd = [OBJECT_TYPE.PACMAN];
 
-        return { classTORemove, classTOAdd }; 
+        return { classesToRemove, classesToAdd }; 
     }
 
     setNewPos(nextMovePos) {
@@ -45,15 +45,13 @@ class Pacman {
     }
 
     handleKeyInput(e, objectExist) {
-        // console.log(e);
         let dir;
-        if (e.keycode >= 37 && e.keycode <= 40) {
+        if (e.keyCode >= 37 && e.keyCode <= 40) {
             dir = DIRECTIONS[e.key];
         } else {
             return;
         }
-
-        const nextMovePos = this.pos + this.dir.movement;
+        const nextMovePos = this.pos + dir.movement;
 
         if (objectExist(nextMovePos, OBJECT_TYPE.WALL)) return;
         this.dir = dir;

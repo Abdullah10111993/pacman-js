@@ -355,6 +355,29 @@ var GameBoard = /*#__PURE__*/function () {
     value: function rotateDiv(pos, deg) {
       this.grid[pos].style.transform = "rotate(".concat(deg, "deg)");
     }
+  }, {
+    key: "moveCharacter",
+    value: function moveCharacter(character) {
+      if (character.shouldMove()) {
+        var _character$getNextMov = character.getNextMove(this.objectExist),
+            nextMovePos = _character$getNextMov.nextMovePos,
+            direction = _character$getNextMov.direction;
+
+        var _character$makeMove = character.makeMove(),
+            classesToRemove = _character$makeMove.classesToRemove,
+            classesToAdd = _character$makeMove.classesToAdd;
+
+        if (character.rotation && nextMovePos !== character.pos) {
+          this.rotateDiv(nextMovePos, character.dir.rotation);
+          this.rotateDiv(character.pos, 0);
+        } // console.log(classesToRemove);
+
+
+        this.removeObject(character.pos, classesToRemove);
+        this.addObject(nextMovePos, classesToAdd);
+        character.setNewPos(nextMovePos, direction);
+      }
+    }
   }], [{
     key: "createGameBoard",
     value: function createGameBoard(DOMGrid, level) {
@@ -392,7 +415,7 @@ var Pacman = /*#__PURE__*/function () {
     this.dir = null;
     this.timer = 0;
     this.powerPill = false;
-    this.rotaion = true;
+    this.rotation = true;
   }
 
   (0, _createClass2.default)(Pacman, [{
@@ -424,11 +447,11 @@ var Pacman = /*#__PURE__*/function () {
   }, {
     key: "makeMove",
     value: function makeMove() {
-      var classTORemove = [_setup.OBJECT_TYPE.PACMAN];
-      var classTOAdd = [_setup.OBJECT_TYPE.PACMAN];
+      var classesToRemove = [_setup.OBJECT_TYPE.PACMAN];
+      var classesToAdd = [_setup.OBJECT_TYPE.PACMAN];
       return {
-        classTORemove: classTORemove,
-        classTOAdd: classTOAdd
+        classesToRemove: classesToRemove,
+        classesToAdd: classesToAdd
       };
     }
   }, {
@@ -439,16 +462,15 @@ var Pacman = /*#__PURE__*/function () {
   }, {
     key: "handleKeyInput",
     value: function handleKeyInput(e, objectExist) {
-      // console.log(e);
       var dir;
 
-      if (e.keycode >= 37 && e.keycode <= 40) {
+      if (e.keyCode >= 37 && e.keyCode <= 40) {
         dir = _setup.DIRECTIONS[e.key];
       } else {
         return;
       }
 
-      var nextMovePos = this.pos + this.dir.movement;
+      var nextMovePos = this.pos + dir.movement;
       if (objectExist(nextMovePos, _setup.OBJECT_TYPE.WALL)) return;
       this.dir = dir;
     }
@@ -492,7 +514,9 @@ function gameOver(pacman, grid) {}
 
 function checkCollision(pacman, ghosts) {}
 
-function gameloop(pacman, ghosts) {}
+function gameLoop(pacman, ghosts) {
+  gameBoard.moveCharacter(pacman);
+}
 
 function startGame() {
   console.log('Starting..');
@@ -504,8 +528,11 @@ function startGame() {
   var pacman = new _Pacman.default(2, 287);
   gameBoard.addObject(287, [_setup.OBJECT_TYPE.PACMAN]);
   document.addEventListener('keydown', function (e) {
-    return pacman.handleKeyInput(e, gameBoard.objectExist);
+    pacman.handleKeyInput(e, gameBoard.objectExist);
   });
+  timer = setInterval(function () {
+    return gameLoop(pacman);
+  }, GLOBAL_SEED);
 } // initialize Game
 
 
