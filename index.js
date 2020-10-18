@@ -1,8 +1,10 @@
 import { LEVEL, OBJECT_TYPE } from './setup';
+import { randomMovement } from './GhostMoves';
 
 // classes
 import GameBoard from './GameBoard';
 import Pacman from './Pacman';
+import Ghost from './Ghost';
 
 //DOM Elements 
 const gameGrid = document.querySelector('#game');
@@ -32,6 +34,8 @@ function checkCollision(pacman, ghosts){
 
 function gameLoop(pacman, ghosts){
     gameBoard.moveCharacter(pacman);
+    
+    ghosts.forEach((ghost) => gameBoard.moveCharacter(ghost));
 }
 
 function startGame(){
@@ -51,7 +55,14 @@ function startGame(){
         pacman.handleKeyInput(e, gameBoard.objectExist)
     });
 
-    timer = setInterval(() => gameLoop(pacman), GLOBAL_SEED);
+    const ghost = [
+        new Ghost(5, 188, randomMovement, OBJECT_TYPE.BLINKY),
+        new Ghost(5, 209, randomMovement, OBJECT_TYPE.PINKY),
+        new Ghost(5, 230, randomMovement, OBJECT_TYPE.INKY),
+        new Ghost(5, 251, randomMovement, OBJECT_TYPE.CLYDE),
+    ];
+
+    timer = setInterval(() => gameLoop(pacman, ghost), GLOBAL_SEED);
 }
 
 // initialize Game
