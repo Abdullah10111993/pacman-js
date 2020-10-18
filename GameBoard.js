@@ -21,8 +21,6 @@ class GameBoard {
         this.DOMGrid.style.cssText = `grid-template-columns: repeat(${GRID_SIZE}, ${CELL_SIZE}px)`;
 
         level.forEach((square, i) => {
-            console.log(square)
-            console.log(i)
             const div = document.createElement('div');
             div.classList.add('square', CLASS_LIST[square]);
             div.style.cssText = `width: ${CELL_SIZE}px; height: ${ CELL_SIZE}px;`;
@@ -42,7 +40,7 @@ class GameBoard {
         this.grid[pos].classList.remove(...classes);
     }
 
-    objectExist(pos, object) {
+    objectExist = (pos, object) => {
         return this.grid[pos].classList.contains(object);
     }
 

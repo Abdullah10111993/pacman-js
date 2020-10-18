@@ -2,6 +2,7 @@ import { LEVEL, OBJECT_TYPE } from './setup';
 
 // classes
 import GameBoard from './GameBoard';
+import Pacman from './Pacman';
 
 //DOM Elements 
 const gameGrid = document.querySelector('#game');
@@ -34,6 +35,23 @@ function gameloop(pacman, ghosts){
 }
 
 function startGame(){
+    console.log('Starting..');
+    gameWin = false;
+    powerPillActive = false;
+    score = 0;
 
+    startButton.classList.add('hide');
+
+    gameBoard.createGrid(LEVEL);
+
+    const pacman = new Pacman(2, 287);
+
+    gameBoard.addObject(287, [OBJECT_TYPE.PACMAN]);
+    document.addEventListener('keydown', e =>
+        pacman.handleKeyInput(e, gameBoard.objectExist)
+    );
 }
 
+// initialize Game
+
+startButton.addEventListener('click', startGame);
