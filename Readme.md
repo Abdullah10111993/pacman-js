@@ -1,6 +1,6 @@
 # Pacman
 
-This is a Pacman game using Javascript which I made watching a tutoirla
+This is a Pacman game using Javascript which I made watching a tutorial
 
 ## How to Install and Run
 
